@@ -33,12 +33,3 @@ async fn main() {
     handle.output().await;
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_increment() {
-
-    }
-}

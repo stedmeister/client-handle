@@ -17,6 +17,7 @@ To provide an ergonomic handle, I also often end up wrapper the `tx` Sender and
  duplicating all of the client functions. As shown below, this results in
 a lot of boiler plate.
 
+```ignore
     // Generate the message enum
     enum Command {
         Get {
@@ -61,6 +62,7 @@ a lot of boiler plate.
             println!("GOT = {:?}", res);
         }
     }
+```
 
 The boiler plate in question is the duplication in:
 
@@ -74,6 +76,7 @@ format based on a trait that the receiving code has to adere to.
 
 In short, the code above could be replaced with the following:
 
+```ignore
     use client_handle::async_tokio_handle;
 
     #[async_tokio_handle]
@@ -82,9 +85,11 @@ In short, the code above could be replaced with the following:
             self.get_value(&key)
         }
     }
+```
 
 And it can be used as follows:
 
+```ignore
     // create a struct for the trait
     struct KvReceiver { /* data owned by the receiver */ };
 
@@ -98,6 +103,7 @@ And it can be used as follows:
         let handle = receiver.to_async_handle();
         let result = handle.get("foo".to_string()).await;
     }
+```
 
 There are other examples in the code.  For the full details of the code
 generated, please see the unit tests in the `client-handle-core` crate.
