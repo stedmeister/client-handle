@@ -17,51 +17,51 @@ To provide an ergonomic handle, I also often end up wrapper the `tx` Sender and
  duplicating all of the client functions. As shown below, this results in
 a lot of boiler plate.
 
-```ignore
-    // Generate the message enum
-    enum Command {
-        Get {
-            reponse: oneshot::Sender<String>,
-            key: String,
+```rust ignore
+// Generate the message enum
+enum Command {
+    Get {
+        reponse: oneshot::Sender<String>,
+        key: String,
+    }
+}
+
+// Create a channel and
+// Spawn a receiver task
+let (tx, mut rx) = mpsc::channel(32);
+tokio::spawn(async move {
+    while let Some(cmd) = rx.recv().await {
+    use Command::*;
+
+    match cmd {
+        Get { reponse, key } => {
+            let value = get_value(&key).await;
+            let _ = response.send(value);
         }
     }
+}
 
-    // Create a channel and
-    // Spawn a receiver task
-    let (tx, mut rx) = mpsc::channel(32);
-    tokio::spawn(async move {
-        while let Some(cmd) = rx.recv().await {
-        use Command::*;
+// Send messages to the channel using an ergonic client
+struct Handle {
+    tx: mpsc::Sender<Command>,
+}
 
-        match cmd {
-            Get { reponse, key } => {
-                let value = get_value(&key).await;
-                let _ = response.send(value);
-            }
-        }
+impl Handle {
+    async fn get(&self, key: &String) {
+        let (resp_tx, resp_rx) = oneshot::channel();
+        let cmd = Command::Get {
+            key: key.to_string(),
+            resp: resp_tx,
+        };
+
+        // Send the GET request
+        tx.send(cmd).await.unwrap();
+
+        // Await the response
+        let res = resp_rx.await;
+        println!("GOT = {:?}", res);
     }
-
-    // Send messages to the channel using an ergonic client
-    struct Handle {
-        tx: mpsc::Sender<Command>,
-    }
-
-    impl Handle {
-        async fn get(&self, key: &String) {
-            let (resp_tx, resp_rx) = oneshot::channel();
-            let cmd = Command::Get {
-                key: key.to_string(),
-                resp: resp_tx,
-            };
-
-            // Send the GET request
-            tx.send(cmd).await.unwrap();
-
-            // Await the response
-            let res = resp_rx.await;
-            println!("GOT = {:?}", res);
-        }
-    }
+}
 ```
 
 The boiler plate in question is the duplication in:
@@ -76,33 +76,33 @@ format based on a trait that the receiving code has to adere to.
 
 In short, the code above could be replaced with the following:
 
-```ignore
-    use client_handle::async_tokio_handle;
+```rust ignore
+use client_handle::async_tokio_handle;
 
-    #[async_tokio_handle]
-    trait KvCommand {
-        fn get(&self, key: String) -> String {
-            self.get_value(&key)
-        }
+#[async_tokio_handle]
+trait KvCommand {
+    fn get(&self, key: String) -> String {
+        self.get_value(&key)
     }
+}
 ```
 
 And it can be used as follows:
 
-```ignore
-    // create a struct for the trait
-    struct KvReceiver { /* data owned by the receiver */ };
+```rust ignore
+// create a struct for the trait
+struct KvReceiver { /* data owned by the receiver */ };
 
-    impl KvCommand for KvReceiver {
-        // Nothing to do here as the trait has default implemenations
-    }
+impl KvCommand for KvReceiver {
+    // Nothing to do here as the trait has default implemenations
+}
 
-    #[tokio::main]
-    async fn main() {
-        let receiver = KvReceiver;
-        let handle = receiver.to_async_handle();
-        let result = handle.get("foo".to_string()).await;
-    }
+#[tokio::main]
+async fn main() {
+    let receiver = KvReceiver;
+    let handle = receiver.to_async_handle();
+    let result = handle.get("foo".to_string()).await;
+}
 ```
 
 There are other examples in the code.  For the full details of the code
