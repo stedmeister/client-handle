@@ -1,0 +1,16 @@
+[package]
+name = "client-handle"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = ["client-handle-derive", "client-handle-core"]
+
+[dependencies]
+client-handle-derive = { path = "client-handle-derive" }
+tokio = { version = "1.23.0", features = ["full"] }
+
+[dev-dependencies]
+trybuild = "1.0.73"
