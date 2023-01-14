@@ -1,6 +1,10 @@
 [package]
 name = "client-handle-core"
 version = "0.1.0"
+description = "An internal helper library of client-handle"
+repository = "https://github.com/stedmeister/client-handle.git"
+authors = ["stedmeister"]
+readme = "README.md"
 edition = "2021"
 license = "MIT"
 

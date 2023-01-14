@@ -1,6 +1,10 @@
 [package]
 name = "client-handle"
 version = "0.1.0"
+description = "A macro to generate client handles when using multithreaded / asynchronous code"
+repository = "https://github.com/stedmeister/client-handle.git"
+authors = ["stedmeister"]
+readme = "README.md"
 edition = "2021"
 license = "MIT"
 
