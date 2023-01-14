@@ -239,15 +239,15 @@ fn generate_struct(ast: &Ast) -> TokenStream {
         }
 
         trait ToAsyncHandle {
-            fn to_async_handle(self) -> #struct_name;
+            fn to_async_handle(self, depth: usize) -> #struct_name;
         }
 
         impl<T> ToAsyncHandle for T
         where
             T: #trait_name + Sync + Send + 'static
         {
-            fn to_async_handle(self: T) -> #struct_name {
-                #struct_name::spawn(self)
+            fn to_async_handle(self: T, depth: usize) -> #struct_name {
+                #struct_name::spawn(self, depth)
             }
         }
 
@@ -256,11 +256,11 @@ fn generate_struct(ast: &Ast) -> TokenStream {
                 Self { handle }
             }
 
-            pub fn spawn<T>(mut sync: T) -> Self
+            pub fn spawn<T>(mut sync: T, depth: usize) -> Self
             where
                 T: #trait_name + Sync + Send + 'static
             {
-                let (tx, mut rx) = tokio::sync::mpsc::channel(32);
+                let (tx, mut rx) = tokio::sync::mpsc::channel(depth);
                 tokio::spawn(async move {
                     while let Some(msg) = rx.recv().await {
                         match msg {
@@ -355,14 +355,14 @@ mod test {
             #[derive(Debug)]
             struct AsyncMyTraitHandle { handle: tokio::sync::mpsc::Sender<AsyncMyTraitMessage>, }
 
-            trait ToAsyncHandle { fn to_async_handle (self) -> AsyncMyTraitHandle ; }
+            trait ToAsyncHandle { fn to_async_handle (self, depth: usize) -> AsyncMyTraitHandle ; }
 
             impl<T> ToAsyncHandle for T
             where
                 T: MyTrait + Sync + Send + 'static
             {
-                fn to_async_handle(self: T) -> AsyncMyTraitHandle {
-                    AsyncMyTraitHandle::spawn(self)
+                fn to_async_handle(self: T, depth: usize) -> AsyncMyTraitHandle {
+                    AsyncMyTraitHandle::spawn(self, depth)
                 }
             }
 
@@ -371,11 +371,11 @@ mod test {
                     Self { handle }
                 }
 
-                pub fn spawn<T>(mut sync: T) -> Self
+                pub fn spawn<T>(mut sync: T, depth: usize) -> Self
                 where
                     T: MyTrait + Sync + Send + 'static
                 {
-                    let (tx, mut rx) = tokio::sync::mpsc::channel(32);
+                    let (tx, mut rx) = tokio::sync::mpsc::channel(depth);
                     tokio::spawn(async move {
                         while let Some(msg) = rx.recv().await {
                             match msg {
@@ -414,7 +414,7 @@ mod test {
 
 
         };
-        let after = async_handle_core(quote!(), before);
+        let after = client_handle_core(quote!(), before);
         assert_tokens_eq(&expected, &after);
     }
 }

@@ -27,7 +27,7 @@ impl DummyTrait for SyncCode {
 #[tokio::main]
 async fn main() {
     let sync = SyncCode{ item: 5 };
-    let handle = sync.to_async_handle();
+    let handle = sync.to_async_handle(32);
     handle.output().await;
     handle.increment(4).await;
     handle.output().await;

@@ -18,7 +18,7 @@ impl MyTrait for Receiver {}
 #[tokio::main]
 async fn main() {
     let receiver = Receiver;
-    let handle = receiver.to_async_handle();
+    let handle = receiver.to_async_handle(32);
     let result = handle.double_echo(4).await;
     assert_eq!(result, 8);
 }
