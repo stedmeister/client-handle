@@ -15,7 +15,7 @@ members = ["client-handle-derive", "client-handle-core"]
 
 [dependencies]
 client-handle-derive = { version = "0.1.0", path = "client-handle-derive" }
-tokio = { version = "1.23.0", features = ["full"] }
+tokio = { version = "1.23.1", features = ["full"] }
 
 [dev-dependencies]
 trybuild = "1.0.73"
