@@ -27,4 +27,5 @@
 ///     assert_eq!(result, 8);
 /// }
 /// ```
+#[cfg(feature = "tokio")]
 pub use client_handle_derive::async_tokio_handle;
