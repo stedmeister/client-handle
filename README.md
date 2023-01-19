@@ -105,6 +105,10 @@ async fn main() {
 }
 ```
 
+# Crate Features
+
+* **tokio** - Enables use of the `async_tokio_handle` macro.
+
 There are other examples in the code.  For the full details of the code
 generated, please see the unit tests in the `client-handle-core` crate.
 
@@ -121,5 +125,5 @@ It was chosen to place the macro on the trait for the following reasons:
 Acknowledgements
 ================
 
-Please see the (notes)[./NOTES.md] file for details on resources used to create
+Please see the [notes](./NOTES.md) file for details on resources used to create
 this proc macro.

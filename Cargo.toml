@@ -13,9 +13,13 @@ license = "MIT"
 [workspace]
 members = ["client-handle-derive", "client-handle-core"]
 
+[features]
+tokio = ["dep:tokio"]
+
 [dependencies]
 client-handle-derive = { version = "0.1.0", path = "client-handle-derive" }
-tokio = { version = "1.23.1", features = ["full"] }
+tokio = { version = "1.23.1", features = ["full"], optional = true }
 
 [dev-dependencies]
 trybuild = "1.0.73"
+tokio = { version = "1.23.1", features = ["full"] }
