@@ -1,0 +1,11 @@
+error: The `async_tokio_handle` macro only works on traits
+ --> tests/ui/non_trait.rs:4:1
+  |
+4 | struct SomeStruct;
+  | ^^^^^^^^^^^^^^^^^^
+
+error: The `async_tokio_handle` macro only works on traits
+ --> tests/ui/non_trait.rs:7:1
+  |
+7 | enum SomeEnum {}
+  | ^^^^^^^^^^^^^^^^

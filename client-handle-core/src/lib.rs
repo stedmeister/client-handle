@@ -1,4 +1,5 @@
 use proc_macro2::{TokenStream};
+use proc_macro_error::{abort};
 use quote::{quote, format_ident, ToTokens};
 use syn::{self, FnArg, TraitItemMethod, Ident, ReturnType, Pat, parse2};
 use convert_case::{Case, Casing};
@@ -9,7 +10,7 @@ pub fn client_handle_core(_attr: TokenStream, item: TokenStream) -> TokenStream 
     if let syn::Item::Trait(trayt) = &ast {
         handle_trait(&Ast { trayt })
     } else {
-        panic!("This macro only works on traits");
+        abort!(ast, "The `async_tokio_handle` macro only works on traits");
     }
 }
 
