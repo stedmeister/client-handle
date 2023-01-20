@@ -127,12 +127,13 @@ Releasing
 
 A new version can be created using:
 
-    cargo release <level> --workspace --all-features --execute
+```bash
+cargo release <level> --workspace --all-features --execute
 
-    e.g.
+e.g.
 
-    cargo release minor --workspace --all-features --execute
-
+cargo release minor --workspace --all-features --execute
+```
 
 Acknowledgements
 ================
