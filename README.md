@@ -122,6 +122,18 @@ It was chosen to place the macro on the trait for the following reasons:
 * Using a trait allows for tools like `automock` to be used for testing
 
 
+Releasing
+=========
+
+A new version can be created using:
+
+    cargo release <level> --workspace --all-features --execute
+
+    e.g.
+
+    cargo release minor --workspace --all-features --execute
+
+
 Acknowledgements
 ================
 
