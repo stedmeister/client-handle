@@ -1,6 +1,6 @@
 [package]
 name = "client-handle-derive"
-version = "0.2.0"
+version = "0.3.0"
 description = "An internal helper library of client-handle"
 repository = "https://github.com/stedmeister/client-handle.git"
 authors = ["stedmeister"]
@@ -14,6 +14,6 @@ license = "MIT"
 proc-macro = true
 
 [dependencies]
-client-handle-core = { version = "0.2.0", path = "../client-handle-core" }
+client-handle-core = { version = "0.3.0", path = "../client-handle-core" }
 proc-macro-error = "1.0.4"
 proc-macro2 = "1.0.49"
